@@ -1,0 +1,122 @@
+geometry
+{
+  import_mesh false ; Use built-in mesh generator
+  dim 3 ; dimension of the domain
+  length 0.1524 ; [m]
+  height 0.0508 ; [m]
+  width  0.1524 ; [m]
+  length_divisions 120 ;
+  height_divisions 40 ;
+  width_divisions 40 ;
+  
+  
+  material_deposition true ;
+  material_deposition_method scan_paths ;
+  material_height 0.0254 ;
+  
+  deposition_length 0.00857 ;
+  deposition_height 0.00328 ;
+  deposition_width 0.00857 ;
+  deposition_lead_time 1.07125 ;
+}
+
+physics
+{
+  thermal    true  ;
+  mechanical false ;
+}
+
+boundary
+{
+  type convective ;
+}
+
+refinement
+{
+  n_refinements 0 ;
+}
+
+materials
+{
+  n_materials 1
+
+  property_format polynomial
+
+  initial_temperature 296.65 ; [K]
+
+  material_0
+  {
+    solid
+    {
+      density 7866.6,-0.3267 ; [kg/m^3]
+      specific_heat 378.28,0.2421 ; [J/kg K]
+      thermal_conductivity_x 16.282,0.0049 ; [W/m K]
+      thermal_conductivity_y 16.282,0.0049 ; [W/m K]
+      thermal_conductivity_z 16.282,0.0049 ; [W/m K]
+      
+      emissivity 0.001
+      convection_heat_transfer_coef 10 ; [W/m^2 K]
+    }
+
+    liquid
+    {
+      density 8518.6,-0.8381 ; [kg/m^3]
+      specific_heat 807.85,0.0088 ; [J/kg K]
+      thermal_conductivity_x 27.708,0.0054 ; [W/m K]
+      thermal_conductivity_y 27.708,0.0054 ; [W/m K]
+      thermal_conductivity_z 27.708,0.0054 ; [W/m K]
+      
+      emissivity 0.001
+      convection_heat_transfer_coef 10 ; [W/m^2 K]
+    }
+    
+    solidus 1563 ; [K]
+    liquidus 1768 ; [K]
+    latent_heat 0 ; [J/kg]
+    
+    radiation_temperature_infty 296.65 ; [K]
+    convection_temperature_infty 296.65 ; [K]
+  }
+}
+
+sources
+{
+  n_beams 1
+
+  beam_0
+  {
+    type gaussian ;
+    A       0.0;                [k = A*log2(depth / radius) + B]
+    B       10.0;               [k = A*log2(depth / radius) + B]
+    depth 0.00639 ;  [m]
+    diameter 0.00857 ; [m]      d = 4 * sigma
+    scan_path_file track_3_scan_path.txt
+    scan_path_file_format segment
+    absorption_efficiency 0.85 ;
+    max_power 5760.0 ; [W],
+  }
+}
+
+time_stepping
+{
+  method forward_euler ;
+  duration 500 ; [s]
+  time_step 1e-2 ; [s]
+}
+
+post_processor
+{
+  filename_prefix output
+  time_steps_between_output 100
+}
+
+discretization
+{
+  thermal 
+  {
+    fe_degree 2 ;            # 8 quadrature points, check dealii documentation
+    quadrature gauss ;
+  }
+}
+
+memory_space host ;
