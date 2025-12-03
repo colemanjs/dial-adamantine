@@ -1,7 +1,7 @@
 geometry
 {
-  import_mesh false ; Use built-in mesh generator
-  dim 3 ; dimension of the domain
+  import_mesh false ;
+  dim 3 ;
   length 0.1524 ; [m]
   height 0.0508 ; [m]
   width  0.1524 ; [m]
@@ -28,7 +28,7 @@ physics
 
 boundary
 {
-  type convective ;
+   type convective,radiative
 }
 
 refinement
@@ -42,31 +42,31 @@ materials
 
   property_format polynomial
 
-  initial_temperature 296.65 ; [K]
+  initial_temperature 299.15 ; [K]
 
   material_0
   {
     solid
     {
-      density 7866.6,-0.3267 ; [kg/m^3]
-      specific_heat 378.28,0.2421 ; [J/kg K]
+      density 7834.4,-0.32 ; [kg/m^3]
+      specific_heat 381.62,0.2398 ; [J/kg K]
       thermal_conductivity_x 16.282,0.0049 ; [W/m K]
       thermal_conductivity_y 16.282,0.0049 ; [W/m K]
       thermal_conductivity_z 16.282,0.0049 ; [W/m K]
       
-      emissivity 0.001
+      emissivity 0.4
       convection_heat_transfer_coef 10 ; [W/m^2 K]
     }
 
     liquid
     {
-      density 8518.6,-0.8381 ; [kg/m^3]
-      specific_heat 807.85,0.0088 ; [J/kg K]
+      density 8473.5,-0.841 ; [kg/m^3]
+      specific_heat 842.619 ; [J/kg K]
       thermal_conductivity_x 27.708,0.0054 ; [W/m K]
       thermal_conductivity_y 27.708,0.0054 ; [W/m K]
       thermal_conductivity_z 27.708,0.0054 ; [W/m K]
       
-      emissivity 0.001
+      emissivity 0.4
       convection_heat_transfer_coef 10 ; [W/m^2 K]
     }
     
@@ -74,8 +74,8 @@ materials
     liquidus 1768 ; [K]
     latent_heat 0 ; [J/kg]
     
-    radiation_temperature_infty 296.65 ; [K]
-    convection_temperature_infty 296.65 ; [K]
+    radiation_temperature_infty 299.15 ; [K]
+    convection_temperature_infty 299.15 ; [K]
   }
 }
 
@@ -92,29 +92,29 @@ sources
     diameter 0.00857 ; [m]      d = 4 * sigma
     scan_path_file track_3_scan_path.txt
     scan_path_file_format segment
-    absorption_efficiency 0.85 ;
-    max_power 5760.0 ; [W],
+    absorption_efficiency 0.8 ;
+    max_power 1.0 ; [W],
   }
 }
 
 time_stepping
 {
   method forward_euler ;
-  duration 500 ; [s]
-  time_step 1e-2 ; [s]
+  duration 3400 ; [s]
+  time_step 0.01 ; [s]
 }
 
 post_processor
 {
   filename_prefix output
-  time_steps_between_output 100
+  time_steps_between_output 400
 }
 
 discretization
 {
   thermal 
   {
-    fe_degree 2 ;            # 8 quadrature points, check dealii documentation
+    fe_degree 2 ;
     quadrature gauss ;
   }
 }
